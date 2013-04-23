@@ -1,0 +1,44 @@
+.reset {
+	margin:0;
+	padding:0;
+}
+
+#header{
+	border-bottom:3px solid #333;
+}
+
+#controls{
+	border-right:1px solid #333;
+	margin-top: 25px;
+	padding-right: 25px;
+	height:100%;
+}
+
+.workbench {
+	margin-top: 25px;
+}
+
+.dndSquare {
+	width: 25px;
+	height: 25px;
+	padding: 10px;
+	border: 1px solid #000;
+	background: grey;
+}
+
+.dndTxt{
+	border: 1px solid #000;
+	text-align: center;
+}
+
+#dndContainer {
+	width: 300px;
+	height: 300px;
+	padding: 10px;
+	border: 1px solid #000;
+}
+
+#dndItemProperties {
+	width: 350px;
+	border: 1px solid #000;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Template | Power2content!</title>
+		<link href="public/stylesheets/main.css" rel="stylesheet" media="screen">
+		<link href="public/libs/dojo-release-1.8.3/dojox/widget/ColorPicker/ColorPicker.css" rel="stylesheet">
+	</head>
+<body>
+
+	<div id="header">Welcome to the drag & drop interface</div>
+	<div id="controls">
+		<button type="button" id="btnAddSquare">Add square</button>
+		<button type="button" id="btnAddTxt">Add static text</button>
+		<button type="button" id="btnAddDynTxt">Add dynamic text</button>
+		<button type="button" id="btnAddImg">Add static image</button>
+		<button type="button" id="btnAddDynImg">Add dynamic image</button>
+		<button type="button" id="btnAddVideo">Add video</button>
+	</div>
+	<div class="workbench">
+		<div id="dndContainer">
+		</div>
+		<div id="dndItemProperties">
+		</div>
+	</div>
+
+	<!-- load Dojo at the end of the body, so that it loads faster -->
+	<script src="public/libs/dojo-release-1.8.3/dojo/dojo.js" data-dojo-config="async:true, parseOnLoad:true"></script> <!-- Dojo hosted on local webserver for better performance --> 
+	<script src="public/javascripts/template.js" type="text/javascript"></script>
+		
+</body>
+</html>
