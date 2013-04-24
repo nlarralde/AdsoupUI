@@ -1,5 +1,5 @@
-require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "dojo/on", "dojo/topic", "dojo/query", "dojo/mouse", "dojo/dnd/Moveable", "dojo/dom-construct", "dojox/widget/ColorPicker", "dojox/uuid", "dojo/domReady!"], 	
-	function(dom, domStyle, Color, domAttr, on, topic, query, mouse, Moveable, domConstruct)
+require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "dojo/on", "dojo/topic", "dojo/parser", "dojox/embed/Flash", "dojo/query", "dojo/mouse", "dojo/dnd/Moveable", "dojo/dom-construct", "dojox/widget/ColorPicker", "dojox/uuid", "dojo/domReady!"], 	
+	function(dom, domStyle, Color, domAttr, on, topic, parser, embedFlash, query, mouse, Moveable, domConstruct)
 	{
 		// GLOBALS
 		var ITEM_NUMBER = 0; // Each item is associated with a number
@@ -20,7 +20,7 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			domConstruct.create("div", { id: "square_" + ITEM_NUMBER, class: "dndSquare", style: "z-index:" + ITEM_NUMBER }, "dndContainer");
 			
 			// Make it moveable
-			var dndSqr = new Moveable("square_" + ITEM_NUMBER);
+			new Moveable("square_" + ITEM_NUMBER);
 							
 			// Refresh the properties
 			var square = dom.byId("square_" + ITEM_NUMBER);
@@ -35,6 +35,7 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			
 			// Each time the properties changes in the input, the item changes
 			on(square, 'click', dynEvents.onClick);
+			on(square, 'dblclick ', dynEvents.onClick);
 			on(square, mouse.enter, dynEvents.selected);
 			on(square, mouse.leave, dynEvents.unSelected);
 		});
@@ -48,7 +49,7 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			domConstruct.create("div", { id: "txt_" + ITEM_NUMBER, class: "dndTxt", style: "z-index:" + ITEM_NUMBER, innerHTML: "Hi I am a text" }, "dndContainer");
 			
 			// Make it moveable
-			var dndTxt = new Moveable("txt_" + ITEM_NUMBER);
+			new Moveable("txt_" + ITEM_NUMBER);
 							
 			// Refresh the properties
 			var txt = dom.byId("txt_" + ITEM_NUMBER);
@@ -63,6 +64,7 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			
 			// Each time the properties changes in the input, the item changes
 			on(txt, 'click', dynEvents.onClick);
+			on(txt, 'dblclick ', dynEvents.onClick);
 			on(txt, mouse.enter, dynEvents.selected);
 			on(txt, mouse.leave, dynEvents.unSelected);
 		});
@@ -76,10 +78,10 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			domConstruct.create("div", { id: "dyn_txt_" + ITEM_NUMBER, class: "dndTxt", style: "z-index:" + ITEM_NUMBER, innerHTML: "[txt]" }, "dndContainer");
 			
 			// Make it moveable
-			var dndTxt = new Moveable("dyn_txt_" + ITEM_NUMBER);
+			new Moveable("dyn_txt_" + ITEM_NUMBER);
 							
 			// Refresh the properties
-			var txt = dom.byId("dyn_txt_" + ITEM_NUMBER);
+			var dynTxt = dom.byId("dyn_txt_" + ITEM_NUMBER);
 			
 			// Dynamic events
 			dynEvents = {
@@ -90,9 +92,10 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
             };
 			
 			// Each time the properties changes in the input, the item changes
-			on(txt, 'click', dynEvents.onClick);
-			on(txt, mouse.enter, dynEvents.selected);
-			on(txt, mouse.leave, dynEvents.unSelected);
+			on(dynTxt, 'click', dynEvents.onClick);
+			on(dynTxt, 'dblclick', dynEvents.onClick);
+			on(dynTxt, mouse.enter, dynEvents.selected);
+			on(dynTxt, mouse.leave, dynEvents.unSelected);
 		});
 		
 		// Event Listener : AddImg
@@ -100,11 +103,11 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 		{
 			ITEM_NUMBER++;
 			
-			// Create a dyn text
+			// Create an image
 			domConstruct.create("img", { id: "img_" + ITEM_NUMBER, class: "dndImg", src: "http://files.meilleurduchef.com/mdc/photo/produits/cr1/bol_soupe_ceramique_11_le_creuset_cerise_01.jpg", style: "z-index:" + ITEM_NUMBER }, "dndContainer");
 			
 			// Make it moveable
-			var dndImg = new Moveable("img_" + ITEM_NUMBER);
+			new Moveable("img_" + ITEM_NUMBER);
 							
 			// Refresh the properties
 			var img = dom.byId("img_" + ITEM_NUMBER);
@@ -121,6 +124,63 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			on(img, 'click', dynEvents.onClick);
 			on(img, mouse.enter, dynEvents.selected);
 			on(img, mouse.leave, dynEvents.unSelected);
+		});
+		
+		// Event Listener : AddDynImg
+		on(BTN_ADD_DYN_IMG, "click", function(evt)
+		{
+			ITEM_NUMBER++;
+			
+			// Create a dyn image
+			domConstruct.create("img", { id: "dyn_img_" + ITEM_NUMBER, class: "dndImg", src: "public/images/[img].png", style: "z-index:" + ITEM_NUMBER }, "dndContainer");
+			
+			// Make it moveable
+			new Moveable("dyn_img_" + ITEM_NUMBER);
+							
+			// Refresh the properties
+			var dynImg = dom.byId("dyn_img_" + ITEM_NUMBER);
+			
+			// Dynamic events
+			dynEvents = {
+                id: "dynEvents",
+                onClick: function(evt){refreshImgProperties(this.id);},
+				selected: function(evt){domStyle.set(this.id, {border: "1px solid yellow", cursor: "pointer"});},
+				unSelected: function(evt){domStyle.set(this.id, "border", "1px solid black");}
+            };
+			
+			// Each time the properties changes in the input, the item changes
+			on(dynImg, 'click', dynEvents.onClick);
+			on(dynImg, mouse.enter, dynEvents.selected);
+			on(dynImg, mouse.leave, dynEvents.unSelected);
+		});
+		
+		// Event Listener : AddVideo
+		on(BTN_ADD_VIDEO, "click", function(evt)
+		{
+			ITEM_NUMBER++;
+			
+			// Create a video
+			domConstruct.create("div", { id: "dyn_video_" + ITEM_NUMBER, class: "dndVideo", style: "z-index:" + ITEM_NUMBER, innerHTML: "[video]" }, "dndContainer");
+			swfobject.embedSWF("public/videos/sample.swf", "dyn_video_" + ITEM_NUMBER, "300", "120", "9.0.0");
+			
+			// Make it moveable
+			new Moveable("dyn_video_" + ITEM_NUMBER);
+							
+			// Refresh the properties
+			var video = dom.byId("dyn_video_" + ITEM_NUMBER);
+			
+			// Dynamic events
+			dynEvents = {
+                id: "dynEvents",
+                onClick: function(evt){refreshVideoProperties(this.id);},
+				selected: function(evt){domStyle.set(this.id, {border: "1px solid yellow", cursor: "pointer"});},
+				unSelected: function(evt){domStyle.set(this.id, "border", "1px solid black");}
+            };
+			
+			// Each time the properties changes in the input, the item changes
+			on(video, mouse.enter, dynEvents.onClick);
+			on(video, mouse.enter, dynEvents.selected);
+			on(video, mouse.leave, dynEvents.unSelected);
 		});
 			
 		// Refresh the properties of squares objects
@@ -151,7 +211,7 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
                 id: "dynEvents",
                 width: function(evt){domStyle.set(nodeId, "width", widthInput.value + "px");},
 				height: function(evt){domStyle.set(nodeId, "height", heightInput.value + "px");},
-				changeColor: function(evt){var pickColor = new dojox.widget.ColorPicker({}, nodeId + "_" + generatedId.toString());},
+				changeColor: function(evt){new dojox.widget.ColorPicker({}, nodeId + "_" + generatedId.toString());},
 				bgColor: function(evt){domStyle.set(nodeId, "backgroundColor", bgColorInput.value.toString());}
             };
 			
@@ -186,8 +246,8 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			domConstruct.create("button", { id: nodeId + "_" + generatedId.toString() + "_bgcolor", innerHTML: "ColorPicker" }, "dndItemProperties");
 			domConstruct.create("input", { id: nodeId + "_bgcolor" }, "dndItemProperties");
 			domConstruct.create("span", { innerHTML: "<br/><br/>Text Color :<br/>" }, "dndItemProperties");
-			var generatedId = Date.now();
-			domConstruct.create("button", { id: nodeId + "_" + generatedId.toString() + "_txtcolor", innerHTML: "ColorPicker" }, "dndItemProperties");
+			var generatedId2 = Date.now();
+			domConstruct.create("button", { id: nodeId + "_" + generatedId2.toString() + "_txtcolor", innerHTML: "ColorPicker" }, "dndItemProperties");
 			domConstruct.create("input", { id: nodeId + "_txtcolor" }, "dndItemProperties");
 			
 			if (dyn != true)
@@ -196,7 +256,7 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			var ffInput = dom.byId(nodeId + "_fontfamily");
 			var changeBgColor = dom.byId(nodeId + "_" + generatedId.toString() + "_bgcolor");
 			var bgColorInput = dom.byId(nodeId + "_bgcolor");
-			var changeTxtColor = dom.byId(nodeId + "_" + generatedId.toString() + "_txtcolor");
+			var changeTxtColor = dom.byId(nodeId + "_" + generatedId2.toString() + "_txtcolor");
 			var txtColorInput = dom.byId(nodeId + "_txtcolor");
 			
 			// Dynamic events
@@ -205,9 +265,9 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 				content: function(evt){domAttr.set(nodeId, "innerHTML", contentInput.value);},
 				fontSize: function(evt){domStyle.set(nodeId, "font-size", fsInput.value);},
 				fontFamily: function(evt){domStyle.set(nodeId, "font-family", ffInput.value);},
-				changeBgColor: function(evt){var pickBgColor = new dojox.widget.ColorPicker({}, nodeId + "_" + generatedId.toString() + "_bgcolor");},
+				changeBgColor: function(evt){new dojox.widget.ColorPicker({}, nodeId + "_" + generatedId.toString() + "_bgcolor");},
 				bgColor: function(evt){domStyle.set(nodeId, "backgroundColor", bgColorInput.value.toString());},
-				changeTxtColor: function(evt){var pickTxtColor = new dojox.widget.ColorPicker({}, nodeId + "_" + generatedId.toString() + "_txtcolor");},
+				changeTxtColor: function(evt){new dojox.widget.ColorPicker({}, nodeId + "_" + generatedId2.toString() + "_txtcolor");},
 				txtColor: function(evt){domStyle.set(nodeId, "color", txtColorInput.value.toString());}
             };
 			
@@ -229,6 +289,35 @@ require(["dojo/dom", "dojo/dom-style", "dojo/_base/Color", "dojo/dom-attr", "doj
 			IMG_WIDTH = domStyle.get(nodeId, "width");
 			IMG_HEIGHT = domStyle.get(nodeId, "height");
 		
+			// Free the div properties
+			domConstruct.empty("dndItemProperties");
+			
+			// Get the node
+			var node = dom.byId(nodeId);
+			
+			domConstruct.create("span", { innerHTML: nodeId + "_properties<br/><br/>Width :<br/>" }, "dndItemProperties");
+			domConstruct.create("input", { id: nodeId + "_width", value: domStyle.get(nodeId, "width")}, "dndItemProperties");
+			domConstruct.create("span", { innerHTML: "<br/><br/>Height :<br/>" }, "dndItemProperties");
+			domConstruct.create("input", { id: nodeId + "_height", value: domStyle.get(nodeId, "height")}, "dndItemProperties");
+			
+			var widthInput = dom.byId(nodeId + "_width");
+			var heightInput = dom.byId(nodeId + "_height");
+			
+			// Dynamic events
+			dynEvents = {
+                id: "dynEvents",
+                width: function(evt){scaleImg(nodeId, widthInput.value, 0);},
+				height: function(evt){scaleImg(nodeId, 0, heightInput.value);}
+            };
+			
+			// Each time the properties changes in the input, the item changes
+			on(widthInput, "change", dynEvents.width);
+			on(heightInput, "change", dynEvents.height);
+		}
+		
+		// Refresh the properties of videos objects
+		function refreshVideoProperties(nodeId)
+		{
 			// Free the div properties
 			domConstruct.empty("dndItemProperties");
 			
